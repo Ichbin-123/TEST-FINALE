@@ -33,7 +33,16 @@ function creaGUI(url){
 
 btnReset.addEventListener("click", (e)=>{    
     resetGUI();
+});
 
+btnSearch.addEventListener("click", (e)=>{
+    const ricettaTrovata = searchID();
+    if(ricettaTrovata===null){
+        alert("Ci dispiace la ricetta non esiste!");
+    } else {
+        resetGUI();
+        createCard(ricettaTrovata);
+    }
 });
 
 function resetGUI(){
@@ -43,6 +52,32 @@ function resetGUI(){
         cardContainerIf.remove();
     }
     creaGUI(url);
+}
+
+function searchID(){
+    const allCards = document.querySelectorAll("[data-ricetta]");
+    const ricettaID = parseInt(searchText.value.trim());
+    let min = 1;
+    let max = 0;
+    allCards.forEach(card => {
+        let valore = parseInt(card.dataset.ricetta);
+        if(valore>max) max=valore;
+        if(valore<min) min=valore;
+    });
+
+    if(isNaN(ricettaID) || ricettaID === "" || ricettaID<min || ricettaID > max){
+        alert(`Prego inserire un valore tra ${min} e ${max}`);
+        searchText.value = "";
+    }
+
+    for(let i = 0; i<allCards.length; i++){
+        if(ricettaID == parseInt(allCards[i].dataset.ricetta)){
+            return restituisciOggettoCard(allCards[i].closest(".recipe"));
+        }
+    }
+
+    return null;
+
 }
 
 
@@ -85,7 +120,12 @@ function createCard(data){
         detailCard.classList.remove("modal--hidden");
     });
 
-    divRecipe.append(divContent, btnDetails);
+    const hiddenID = document.createElement("p");
+    hiddenID.id = data.id;
+    hiddenID.dataset.ricetta = data.id;
+    hiddenID.hidden = true;
+
+    divRecipe.append(hiddenID, divContent, btnDetails);
 
     return divRecipe;
 }
@@ -133,6 +173,25 @@ function createDetailCard(data){
     divContent.append(imgModal, divText);
 
     return divContent;
+}
+
+function restituisciOggettoCard(card){
+
+    const oggettoCard = {
+
+        cuisine : card.cuisine,
+        image : card.image,
+        name : card.name,
+        difficulty : card.difficulty,
+        caloriesPerServing : card.caloriesPerServing,
+        prepTimeMinutes : card.prepTimeMinutes,
+        id : card.id,
+        ingredients : card.ingredients,
+        instructions : card.instructions
+    }
+
+    return oggettoCard;
+
 }
 
 /*****************************
