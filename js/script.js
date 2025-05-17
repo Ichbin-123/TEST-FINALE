@@ -41,7 +41,7 @@ btnSearch.addEventListener("click", (e)=>{
         alert("Ci dispiace la ricetta non esiste!");
     } else {
         resetGUI();
-        createCard(ricettaTrovata);
+        recipes.append(createCard(ricettaTrovata));
     }
 });
 
@@ -98,6 +98,7 @@ function createCard(data){
     const arrayP =  new Array(3);
     for(let i=0; i<3; i++){
         const pn = document.createElement("p");
+        pn.id = `el-${i+1}`;
         arrayP[i] = pn;
     }
     arrayP[0].innerText = `Difficoltà: ${data.difficulty}`;
@@ -158,6 +159,7 @@ function createDetailCard(data){
     h3Ingredienti.classList.add("modal-ingredienti", "modal-title-description");
     h3Ingredienti.innerText = "Ingredients:";
     const pIngredienti = document.createElement("p");
+    pIngredienti.id = "ingredienti";
     pIngredienti.classList.add("modal-ingredienti", "modal-description");
     pIngredienti.innerText = data.ingredients.join(", "); // ingredients
 
@@ -165,6 +167,7 @@ function createDetailCard(data){
     h3Description.classList.add("modal-description", "modal-title-description");
     h3Description.innerText = "Description:";
     const pDescription = document.createElement("p");
+    pDescription.id = "description";
     pDescription.classList.add("modal-description");
     pDescription.innerText = data.instructions.join(", ");
 
@@ -179,15 +182,15 @@ function restituisciOggettoCard(card){
 
     const oggettoCard = {
 
-        cuisine : card.cuisine,
-        image : card.image,
-        name : card.name,
-        difficulty : card.difficulty,
-        caloriesPerServing : card.caloriesPerServing,
-        prepTimeMinutes : card.prepTimeMinutes,
-        id : card.id,
-        ingredients : card.ingredients,
-        instructions : card.instructions
+        cuisine : card.querySelector("h2.cucina").innerText,// card.cuisine,
+        image : card.querySelector("img").src, //.image,
+        name : card.querySelector("h3").innerText, //name,
+        difficulty : card.querySelector("#el-1").innerText, //.difficulty,
+        caloriesPerServing : card.querySelector("#el-2").innerText, //caloriesPerServing,
+        prepTimeMinutes : card.querySelector("#el-3").innerText, //prepTimeMinutes,
+        id : card.querySelector("p[data-ricetta]"),
+        ingredients : card.querySelector("p#ingredienti").innerText.split(","),
+        instructions : card.querySelector("p#desciption").innerText.split(","),
     }
 
     return oggettoCard;
