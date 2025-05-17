@@ -32,7 +32,8 @@ function creaGUI(url){
 }
 
 btnReset.addEventListener("click", (e)=>{    
-    resetGUI();
+    resetGUI();    
+    creaGUI(url);
 });
 
 btnSearch.addEventListener("click", (e)=>{
@@ -51,7 +52,6 @@ function resetGUI(){
     if(cardContainerIf!==null){
         cardContainerIf.remove();
     }
-    creaGUI(url);
 }
 
 function searchID(){
@@ -189,8 +189,8 @@ function restituisciOggettoCard(card){
         caloriesPerServing : card.querySelector("#el-2").innerText, //caloriesPerServing,
         prepTimeMinutes : card.querySelector("#el-3").innerText, //prepTimeMinutes,
         id : card.querySelector("p[data-ricetta]"),
-        ingredients : card.querySelector("p#ingredienti").innerText.split(","),
-        instructions : card.querySelector("p#desciption").innerText.split(","),
+        ingredients : card.querySelector("#ingredienti")?.innerText.split(",") || [],
+        instructions : card.querySelector("#desciption")?.innerText.split(",") || []
     }
 
     return oggettoCard;
