@@ -4,6 +4,7 @@ const url = "http://localhost:3000/recipes";
 const recipes = document.querySelector(".recipes");
 const detailCard = document.querySelector(".modal");
 const detailInner = document.querySelector(".modal-inner");
+const closeModal = document.querySelector(".btn--close-modal");
 
 
 fetch(url)
@@ -13,13 +14,15 @@ fetch(url)
         const cardContainer = document.createElement("div");
         cardContainer.classList.add("card-container");
         rispostaObj.forEach(data => {
-            cardContainer.append(creteCard(data));            
+            cardContainer.append(createCard(data));            
         });
         recipes.append(cardContainer);
     })
     .catch(err => console.log(`Errore: ${err}`));
 
-function creteCard(data){
+
+
+function createCard(data){
     const divRecipe = document.createElement("div");
     divRecipe.classList.add("recipe");
     const divContent = document.createElement("div");
@@ -50,13 +53,61 @@ function creteCard(data){
     btnDetails.classList.add("btn", "button--product");
     btnDetails.innerText = "Details..."
 
+    btnDetails.addEventListener("click", (e)=>{
+        console.log("Hai cliccato");
+        console.log("Ciao sono qui: ", e.target.closest(".recipe"));
+        detailInner.append(createDetailCard(data));
+        detailCard.classList.remove("modal--hidden");
+    });
+
     divRecipe.append(divContent, btnDetails);
 
     return divRecipe;
 }
 
 function createDetailCard(data){
-    
+
+    closeModal.addEventListener("click", (e)=>{
+        let vecchio = document.querySelector(".modal-content")
+        if(vecchio!==null){
+            vecchio.remove();
+        }
+        detailCard.classList.add("modal--hidden");
+    });
+
+    const divContent = document.createElement("div");
+    divContent.classList.add("modal-content");
+    const imgModal = document.createElement("img");
+    imgModal.classList.add("modal-image");
+    imgModal.src = data.image;
+    imgModal.alt = data.name;
+
+    const divText = document.createElement("div");
+    divText.classList.add("modal-text");
+
+    const h2Title = document.createElement("h2");
+    h2Title.classList.add("modal-title");
+    h2Title.innerText = data.name;
+
+    const h3Ingredienti = document.createElement("h3");
+    h3Ingredienti.classList.add("modal-ingredienti", "modal-title-description");
+    h3Ingredienti.innerText = "Ingredients:";
+    const pIngredienti = document.createElement("p");
+    pIngredienti.classList.add("modal-ingredienti", "modal-description");
+    pIngredienti.innerText = data.ingredients.join(", "); // ingredients
+
+    const h3Description = document.createElement("h3");
+    h3Description.classList.add("modal-description", "modal-title-description");
+    h3Description.innerText = "Description:";
+    const pDescription = document.createElement("p");
+    pDescription.classList.add("modal-description");
+    pDescription.innerText = data.instructions.join(", ");
+
+
+    divText.append(h2Title, h3Ingredienti,pIngredienti,h3Description,pDescription);
+    divContent.append(imgModal, divText);
+
+    return divContent;
 }
 
 /*****************************
@@ -77,5 +128,17 @@ instructions [] < Season
 *******************************/
 
  /*****************************
+  * 
+  * 
+  *  <div class="modal-text">
+            <h2 class="modal-title"></h2>
+            <p class="modal-price"></p>
+            <h3 class="modal-title-description">Description:</h3>
+            <p class="modal-description">
+              
+            </p>
+            <button class="btn btn--add-to-cart">Add to cart</button>
+    </div>
+          
 
 *******************************/
