@@ -5,20 +5,45 @@ const recipes = document.querySelector(".recipes");
 const detailCard = document.querySelector(".modal");
 const detailInner = document.querySelector(".modal-inner");
 const closeModal = document.querySelector(".btn--close-modal");
+const searchText = document.getElementById("searchText");
+const btnSearch = document.getElementById("search");
+const btnReset = document.getElementById("reset");
+
+creaGUI(url);
 
 
-fetch(url)
-    .then(risposta => risposta.json())
-    .then(rispostaObj => {
-        console.log(rispostaObj);
-        const cardContainer = document.createElement("div");
-        cardContainer.classList.add("card-container");
-        rispostaObj.forEach(data => {
-            cardContainer.append(createCard(data));            
-        });
-        recipes.append(cardContainer);
-    })
-    .catch(err => console.log(`Errore: ${err}`));
+
+
+function creaGUI(url){
+
+    fetch(url)
+        .then(risposta => risposta.json())
+        .then(rispostaObj => {
+            console.log(rispostaObj);
+            const cardContainer = document.createElement("div");
+            cardContainer.classList.add("card-container");
+            rispostaObj.forEach(data => {
+                cardContainer.append(createCard(data));            
+            });
+            recipes.append(cardContainer);
+        })
+        .catch(err => console.log(`Errore: ${err}`));
+
+}
+
+btnReset.addEventListener("click", (e)=>{    
+    resetGUI();
+
+});
+
+function resetGUI(){
+    searchText.value ="";
+    let cardContainerIf = document.querySelector(".card-container");
+    if(cardContainerIf!==null){
+        cardContainerIf.remove();
+    }
+    creaGUI(url);
+}
 
 
 
@@ -68,9 +93,9 @@ function createCard(data){
 function createDetailCard(data){
 
     closeModal.addEventListener("click", (e)=>{
-        let vecchio = document.querySelector(".modal-content")
-        if(vecchio!==null){
-            vecchio.remove();
+        let cleanModal = document.querySelector(".modal-content")
+        if(cleanModal!==null){
+            cleanModal.remove();
         }
         detailCard.classList.add("modal--hidden");
     });
